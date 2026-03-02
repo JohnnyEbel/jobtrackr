@@ -1,8 +1,8 @@
 from flask import Flask, request, jsonify
-import sqlite3
+import sqlite3, os
 
 app = Flask(__name__)
-DB = "jobs.db"
+DB = os.getenv("DB_PATH", "jobs.db")
 
 def init_db():
     conn = sqlite3.connect(DB)
