@@ -1,4 +1,4 @@
-name: Docker Build
+name: Docker Build & Push
 
 on:
   push:
@@ -8,13 +8,21 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      packages: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Docker Build
-        uses: docker/setup-buildx-action@v3
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Build Docker image
         run: |
-          docker build -t jobtrackr:ci ./app
+          docker build -t ghcr.io/${{ github.actor }}/jobtrackr:latest ./app
+
+      - name: Push Docker image
+        run: |
+          docker push ghcr.io/${{ github.actor }}/jobtrackr:latest
