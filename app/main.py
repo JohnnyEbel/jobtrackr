@@ -18,6 +18,10 @@ def init_db():
     conn.commit()
     conn.close()
 
+@app.route("/")
+def home():
+    return "JobTrackr is running 🚀"
+
 @app.route("/jobs", methods=["POST"])
 def add_job():
     data = request.json
